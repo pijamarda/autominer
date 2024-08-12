@@ -4,8 +4,8 @@ const SULFUR_PRICE = 100;
 const DRILL_PRICE = 1000;
 const SILVER_MINE_STEPS = 10;
 
-var iron = 0;
-var silver = 0;
+var iron = 10000;
+var silver = 1000;
 var gold = 0;
 
 var iron_workers = 0;
