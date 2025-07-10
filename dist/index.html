@@ -1,39 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="dark">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Auto Miner</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="img/jewelry.png">
     <style>
+      /* Import Google Fonts for better typography */
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-      /* .cell button.iron, .cell .control input.iron {
-        width: 100%;
+      /* Base typography improvements */
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
       }
 
-      @media(max-width: 768px) {
-        .cell button.iron {
-          width: auto;
-        }
+      /* Responsive typography */
+      .title {
+        font-weight: 700;
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+      }
 
-        .cell .control input.iron {
-          width: 142px;
-        }
-      } */
+      .subtitle {
+        font-weight: 500;
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        opacity: 0.9;
+      }
 
+      /* Section headings */
+      .is-size-4 {
+        font-weight: 600;
+        font-size: clamp(1.1rem, 3vw, 1.5rem) !important;
+      }
+
+      .is-size-5 {
+        font-weight: 500;
+        font-size: clamp(0.9rem, 2.5vw, 1.125rem) !important;
+      }
+
+      /* Resource display - theme-aware */
       section#resource-display {
         position: absolute;
-        left: calc(50vw - 101.5px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        min-width: 320px;
       }
+      
       section#resource-display.fixed {
         position: fixed;
         top: 7px;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       #resource-display {
-        background-color: lightgray;
-        border: 1px solid black;
+        background: hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l));
+        border: 2px solid hsl(var(--bulma-primary-h), var(--bulma-primary-s), calc(var(--bulma-primary-l) - 20%));
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      /* Light theme - use dark text */
+      [data-theme="light"] #resource-display {
+        color: #2c3e50;
+      }
+
+      /* Dark theme - use white text */
+      [data-theme="dark"] #resource-display {
+        color: #ffffff;
+      }
+
+      /* Button text improvements */
+      .button {
+        font-weight: 500;
+        font-size: clamp(0.8rem, 2vw, 1rem);
+        border-radius: 8px;
+        transition: all 0.2s ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Input styling */
+      .input {
+        font-size: clamp(0.8rem, 2vw, 1rem);
+        border-radius: 6px;
+      }
+
+      /* Mobile-specific improvements */
+      @media(max-width: 768px) {
+        .container {
+          padding: 0 1rem;
+        }
+        
+        .section {
+          padding: 1.5rem 0;
+        }
+        
+        .box {
+          padding: 1rem;
+        }
+        
+        .button {
+          min-height: 44px; /* Touch-friendly */
+        }
+        
+        .input {
+          min-height: 44px; /* Touch-friendly */
+        }
       }
 
       @media(max-width: 450px) {
@@ -45,6 +125,114 @@
           margin-bottom: 7px;
           width: 50% !important;
         }
+        
+        section#resource-display,
+        section#resource-display.fixed {
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          width: 98vw !important;
+          padding: 0.5rem !important;
+          margin: 0 !important;
+        }
+        
+        #resource-display .is-flex {
+          flex-direction: row !important;
+          flex-wrap: wrap !important;
+          justify-content: space-around !important;
+          align-items: center !important;
+          gap: 0.25rem !important;
+        }
+        
+        #resource-display .mx-2 {
+          margin: 0.2rem !important;
+          min-width: 40% !important;
+          max-width: 45% !important;
+          justify-content: center !important;
+          font-size: 0.9rem !important;
+        }
+        
+        #resource-display .image {
+          width: 28px !important;
+          height: 28px !important;
+          margin-right: 0.3rem !important;
+        }
+        
+        #resource-display .icon {
+          width: 28px !important;
+          height: 28px !important;
+          margin-right: 0.3rem !important;
+        }
+        
+        #resource-display .ml-1 {
+          margin-left: 0.3rem !important;
+          font-size: 0.9rem !important;
+        }
+        
+        #resource-display .has-text-weight-semibold {
+          font-size: 1rem !important;
+          font-weight: 700 !important;
+        }
+        
+        .title {
+          text-align: center;
+          margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+          text-align: center;
+          margin-bottom: 1.5rem;
+        }
+      }
+
+      /* Affordability styling */
+      .unaffordable {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .unaffordable:hover {
+        background-color: #f14668 !important;
+        color: white !important;
+      }
+
+      /* Enhanced visual hierarchy */
+      .has-text-weight-semibold {
+        font-weight: 600;
+      }
+
+      .has-text-weight-bold {
+        font-weight: 700;
+      }
+
+      /* Progress bar improvements */
+      .progress {
+        border-radius: 6px;
+        height: 12px;
+      }
+
+      /* Modal improvements */
+      .modal-card-title {
+        font-weight: 600;
+        font-size: 1.5rem;
+      }
+
+      .modal-card-body h4 {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l));
+      }
+
+      .modal-card-body p, .modal-card-body li {
+        line-height: 1.6;
+      }
+
+      /* Dark theme specific improvements */
+      [data-theme="dark"] .modal-card-body h4 {
+        color: hsl(var(--bulma-primary-h), var(--bulma-primary-s), calc(var(--bulma-primary-l) + 20%));
+      }
+
+      [data-theme="dark"] .box {
+        background-color: hsl(var(--bulma-scheme-main-h), var(--bulma-scheme-main-s), calc(var(--bulma-scheme-main-l) + 3%));
       }
     </style>
   </head>
@@ -53,30 +241,59 @@
     
   <header id="game-intro" class="section p-3">
     <div class="container">
-      <h1 class="title">
+      <h1 class="title has-text-weight-bold">
         Auto Miner - Idle Game
       </h1>      
-      <p class="subtitle">
-        Automate the mining, and reach the maximum  <strong>Silver</strong>!
+      <p class="subtitle has-text-weight-medium">
+        Automate the mining, leave the TAB open, and reach the maximum  <strong>Silver</strong>!
       </p>
+      <div class="is-flex is-align-items-center">
+        <button id="help-button" class="button is-info is-small mr-2" onclick="openHelpModal()">
+          <span class="icon">
+            <i class="fas fa-question-circle"></i>
+          </span>
+          <span>Help</span>
+        </button>
+        <button id="theme-toggle" class="button is-light is-small" onclick="toggleTheme()" title="Toggle light/dark theme">
+          <span class="icon">
+            <i id="theme-icon" class="fas fa-sun"></i>
+          </span>
+        </button>
+      </div>
     </div>
   </header>
 
   <main class="section p-3">
-    <section id="resource-display" class="box p-2 is-flex is-justify-content-center is-grey border" style="z-index: 1">
-      <div id="iron-display" class="is-flex is-align-items-center">
-        <figure class="image is-32x32">
-          <img src="img/beam.png">
-        </figure>
-        <div class="ml-1">Iron:</div>
-        <div id="iron_counter" class="ml-1">0</div>
-      </div>
-      <div id="silver-display" class="is-flex is-align-items-center ml-4">
-        <figure class="image is-32x32">
-          <img src="img/jewelry.png">
-        </figure>
-        <div class="ml-1">Silver:</div>
-        <div id="silver_counter" class="ml-1">0</div>
+    <section id="resource-display" class="box p-2 is-grey border" style="z-index: 1">
+      <div class="is-flex is-flex-wrap-wrap is-justify-content-center">
+        <div id="iron-display" class="is-flex is-align-items-center mx-2 my-1">
+          <figure class="image is-32x32">
+            <img src="img/beam.png">
+          </figure>
+          <div class="ml-1">Iron:</div>
+          <div id="iron_counter" class="ml-1 has-text-weight-semibold">0</div>
+        </div>
+        <div id="silver-display" class="is-flex is-align-items-center mx-2 my-1">
+          <figure class="image is-32x32">
+            <img src="img/jewelry.png">
+          </figure>
+          <div class="ml-1">Silver:</div>
+          <div id="silver_counter" class="ml-1 has-text-weight-semibold">0</div>
+        </div>
+        <div id="sulfur-display" class="is-flex is-align-items-center mx-2 my-1">
+          <span class="icon is-small mr-1">
+            <i class="fas fa-vial" style="color: #f39c12;"></i>
+          </span>
+          <div class="ml-1">Sulfur:</div>
+          <div id="sulfur_counter_top" class="ml-1 has-text-weight-semibold">0</div>
+        </div>
+        <div id="drill-display" class="is-flex is-align-items-center mx-2 my-1">
+          <span class="icon is-small mr-1">
+            <i class="fas fa-tools" style="color: #95a5a6;"></i>
+          </span>
+          <div class="ml-1">Drills:</div>
+          <div id="drill_counter_top" class="ml-1 has-text-weight-semibold">0</div>
+        </div>
       </div>
     </section>
 
@@ -84,32 +301,56 @@
 
     <section id="section-iron" class="block">
       <div class="container">
-        <div class="fixed-grid has-3-cols has-2-cols-mobile">
+        <div class="fixed-grid">
+          <div class="fixed-grid">
+            <div class="grid">            
+              <div class="cell has-text-centered is-size-4 has-text-weight-semibold"> ⛏️ Iron Mining </div>  
+              
+            </div>        
+          </div>
           <div class="grid">
             <div class="cell">
-              <button class="button iron is-grey is-fullwidth" onclick="ironClick()">Click to Mine 1 Iron 
+              <button class="button iron is-grey is-fullwidth" onclick="ironClick()" title="Click to manually mine iron. This is how you start!">Click to Mine 1 Iron
                 <figure class="image is-16x16 ml-2">
                   <img src="img/beam.png">
                 </figure>
               </button>
             </div>
-            <div id="iron_prod_label" class="cell p-2 has-text-centered">Production: 0 Iron/sec</div>
-            <div id="iron_worker_label" class="cell p-2 has-text-centered">1 Iron miner costs 10 Iron</div>
-            <div id="iron_worker_counter" class="cell p-2 has-text-centered is-flex is-align-items-center is-justify-content-center">Iron miners: 0
+                                         
+          </div>        
+        </div>
+        <hr style="background-color: rgb(98, 120, 216); opacity: 0.6">
+        <div class="fixed-grid">
+          <div class="grid">            
+            <div class="cell has-text-centered is-size-4 has-text-weight-semibold"> 🤖 Iron Mining Automation </div>  
+            <div id="iron_prod_label" class="cell has-text-centered is-size-5">Production: 0 Iron/sec</div>                   
+          </div>        
+        </div>
+        <div class="fixed-grid">
+          <div class="grid">            
+            <div id="iron_worker_label" class="cell has-text-centered is-size-5">1 Iron miner costs 10 Iron</div>
+            <div id="iron_worker_counter" class="cell has-text-centered is-flex is-align-items-center is-justify-content-center is-size-5">Iron miners: 0
               <figure class="image is-16x16 ml-2">
                 <img src="img/pick-axe.webp">
               </figure>
-            </div>
+            </div>                   
+          </div>        
+        </div>
+        <div class="fixed-grid has-3-cols">
+          <div class="grid">    
+            <div class="cell">
+              <button class="button iron is-grey is-fullwidth" onclick="buyIronMiner()" title="Buy automated iron miners. Cost increases with each purchase.">Buy Iron Miner</button>
+            </div>   
+            
+            <div id="worker_price_label" class="cell has-text-centered is-size-5">Cost 0</div>
             <div class="cell">
               <div class="control">
-                <input id="number_workers_tobuy" class="input iron p-2 is is-fullwidth" type="number" value="1" />
+                <input id="number_workers_tobuy" class="input iron p-2 is" type="number" value="1" />
               </div>
             </div>
-            <div class="cell">
-              <button class="button iron is-grey is-fullwidth" onclick="buyIronMiner()">Buy Iron Miner</button>
-            </div>       
+                   
           </div>        
-        </div>           
+        </div>         
       </div>
     </section>
 
@@ -117,37 +358,80 @@
   
     <section id="sulfer-drill" class="block">
       <div class="container"> 
-        <div class="fixed-grid has-4-cols has-2-cols-mobile">
+
+        <div class="fixed-grid">
+          <div class="grid">            
+            <div class="cell has-text-centered is-size-4 has-text-weight-semibold"> 🧪 Sulfur Buying Station </div>                   
+          </div>        
+        </div>
+
+        <div class="fixed-grid">
+          <div class="grid">            
+            <div class="cell p-2 has-text-centered is-size-5">1 sulfur costs 50 iron</div>
+            <div id="sulfur_counter" class="cell p-2 has-text-centered is-size-5">0 sulfur</div>
+          </div>
+        </div>
+
+        <div class="fixed-grid has-3-cols">
           <div class="grid">
             
-            <div class="cell p-2 has-text-centered">1 sulfur costs 100 iron</div>
-            <div id="sulfur_counter" class="cell p-2 has-text-centered">0 sulfur</div>
+            <div class="cell">
+              <button class="button is-grey is-fullwidth" style="margin-bottom: 7px;" onclick="buySulfur()" title="Buy sulfur with iron. Sulfur is consumed when mining silver.">Buy Sulfur</button>
+            </div>
+            <div id="sulfur_price_label" class="cell has-text-centered is-size-5">Cost 0</div>
             <div class="cell">
               <div class="control">
                 <input id="number_tobuy_sulfur" class="input" type="number" value="1" />
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="fixed-grid">
+          <div class="grid">  
             <div class="cell">
-              <button class="button is-grey is-fullwidth" style="margin-bottom: 7px;" onclick="buySulfur()">Buy Sulfur</button>
-            </div>  
-            <div class="cell">
-              <label class="checkbox">
+              <label class="checkbox is-size-5">
                 <input id="sulfur_autobuy_check" type="checkbox" />
                   AutoBuy
               </label>
-            </div>          
-            <div class="cell p-2 has-text-centered">1 drill costs 1000 iron</div>
-            <div id="drill_counter" class="cell p-2 has-text-centered">0 drills</div>
+            </div>
+          </div>
+        </div>
+
+        <hr style="background-color: rgb(98, 120, 216); opacity: 0.6">
+
+        <div class="fixed-grid">
+          <div class="grid">            
+            <div class="cell has-text-centered is-size-4 has-text-weight-semibold"> 🔧 Drill Buying Station </div>                               
+          </div>        
+        </div>
+
+        <div class="fixed-grid">
+          <div class="grid">
+            <div class="cell p-2 has-text-centered is-size-5">1 drill costs 500 iron</div>
+            <div id="drill_counter" class="cell p-2 has-text-centered is-size-5">0 drills</div>
+          </div>
+        </div>
+
+        <div class="fixed-grid has-3-cols">
+          <div class="grid">
+            
+            <div class="cell">
+              <button class="button is-grey is-fullwidth" onclick="buyDrill()" title="Buy drills with iron. Drills are consumed when mining silver.">Buy Drill</button>
+            </div>
+            <div id="drill_price_label" class="cell has-text-centered is-size-5">Cost 0</div>
             <div class="cell">
               <div class="control">
                 <input id="number_tobuy_drill" class="input" type="number" value="1" />
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="fixed-grid">
+          <div class="grid">
             <div class="cell">
-              <button class="button is-grey is-fullwidth" onclick="buyDrill()">Buy Drill</button>
-            </div>
-            <div class="cell">
-              <label class="checkbox">
+              <label class="checkbox is-size-5">
                 <input id="drill_autobuy_check" type="checkbox" />
                   AutoBuy
               </label>
@@ -161,35 +445,111 @@
 
     <section id="section-silver" class="block">
       <div class="container">
-        <div class="fixed-grid has-3-cols has-2-cols-mobile">
+
+        <div class="fixed-grid">
+          <div class="grid">            
+            <div class="cell has-text-centered is-size-4 has-text-weight-semibold"> 💎 Silver Mining </div>  
+            
+          </div>        
+        </div>
+
+        <div class="fixed-grid">
           <div class="grid">  
-            <div id="silver-button-container" class="cell">
-              <div class="has-text-centered">1 Silver needs 10 Sulfur and 1 Drill</div>
-              <button class="button is-grey is-fullwidth my-1" onclick="silverClick()">Click 10 times to Mine 1 Silver
+            <div id="silver-button-container" class="cell">              
+              <button class="button is-grey is-fullwidth my-1" onclick="silverClick()" title="Click 5 times to mine 1 silver. Requires 10 sulfur and 1 drill.">Click 5 times to Mine 1 Silver
                 <figure class="image is-16x16 ml-2">
                   <img src="img/jewelry.png">
                 </figure>
               </button>
               <progress id="silver-progress" class="progress is-small" value="1" max="100">1%</progress>
             </div>
-            <div id="silver_prod_label" class="cell p-2 is-flex is-align-items-center is-justify-content-center">Production: 0 Silver/sec</div>
-            <div id="silver_worker_label" class="cell p-2 has-text-centered">1 Silver miner costs 10 Silver</div>
-            <div id="silver_worker_counter" class="cell p-2 is-flex is-align-items-center is-justify-content-center">Silver miners: 0
+            <div class="has-text-centered is-size-5">1 Silver needs 10 Sulfur and 1 Drill</div>
+          </div>
+        </div>
+
+        <hr style="background-color: rgb(98, 120, 216); opacity: 0.6">
+
+        <div class="fixed-grid">
+          <div class="grid">            
+            <div class="cell has-text-centered is-size-4 has-text-weight-semibold"> 🤖 Silver Mining Automation </div>        
+            <div id="silver_prod_label" class="cell p-2 is-flex is-align-items-center is-justify-content-center is-size-5">Production: 0 Silver/sec</div>      
+          </div>        
+        </div>
+
+        <div class="fixed-grid">
+          <div class="grid">
+            <div id="silver_worker_label" class="cell p-2 has-text-centered is-size-5">1 Silver miner costs 10 Silver</div>
+            <div id="silver_worker_counter" class="cell p-2 is-flex is-align-items-center is-justify-content-center is-size-5">Silver miners: 0
               <figure class="image is-16x16 ml-2">
                 <img src="img/pick-axe.webp">
               </figure>
             </div>
-            <div class="cell"><div class="control">
-              <input id="number_silver_workers_tobuy" class="input" type="number" value="1" />
-            </div></div>
+          </div>
+        </div>
+
+        <div class="fixed-grid has-3-cols">
+          <div class="grid">
+            
             <div class="cell">
-              <button class="button is-grey is-fullwidth" onclick="buySilverMiner()">Buy Silver Miner</button></div>
+              <button class="button is-grey is-fullwidth" onclick="buySilverMiner()" title="Buy automated silver miners. Requires silver to purchase.">Buy Silver Miner</button>
+            </div>
+            <div id="silver_worker_price_label" class="cell has-text-centered is-size-5">Cost 0</div>
+            <div class="cell">
+              <div class="control">
+                <input id="number_silver_workers_tobuy" class="input" type="number" value="1" />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- Help/Welcome Modal -->
+  <div id="help-modal" class="modal">
+    <div class="modal-background" onclick="closeHelpModal()"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Welcome to Auto Miner!</p>
+        <button class="delete" onclick="closeHelpModal()"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="content">
+          <h4>🎯 Goal</h4>
+          <p>Build an automated mining empire to maximize <strong>Silver</strong> production!</p>
+          
+          <h4>🚀 Getting Started</h4>
+          <ol>
+            <li><strong>Click to Mine Iron</strong> - Start by manually clicking the iron mining button</li>
+            <li><strong>Buy Iron Miners</strong> - Automate iron production (cost increases each time)</li>
+            <li><strong>Gather Resources</strong> - Use iron to buy sulfur and drills</li>
+            <li><strong>Mine Silver</strong> - Requires 10 sulfur + 1 drill per silver</li>
+            <li><strong>Scale Up</strong> - Buy silver miners to automate everything!</li>
+          </ol>
+
+          <h4>💡 Resources</h4>
+          <ul>
+            <li><strong>Iron</strong> - Basic resource, mined manually or with miners</li>
+            <li><strong>Sulfur</strong> - Costs 50 iron, consumed when mining silver</li>
+            <li><strong>Drills</strong> - Cost 500 iron, consumed when mining silver</li>
+            <li><strong>Silver</strong> - Premium resource, used to buy silver miners</li>
+          </ul>
+
+          <h4>⚡ Pro Tips</h4>
+          <ul>
+            <li>Use the <strong>Auto-buy</strong> checkboxes for sulfur and drills</li>
+            <li>Hover over buttons to see helpful tooltips</li>
+            <li>Red buttons mean you can't afford that purchase yet</li>
+            <li>Resource counters stay visible while you scroll</li>
+          </ul>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-success" onclick="closeHelpModal()">Start Mining!</button>
+        <button class="button" onclick="closeHelpModal()">Close</button>
+      </footer>
+    </div>
+  </div>
   
   <script src="game.js"></script>
   </body>
