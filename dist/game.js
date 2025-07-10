@@ -40,6 +40,111 @@ if (DEBUG)
  * @param {function} errorFunc (Optional) Callback to run if the drift
  *                             exceeds interval
  */
+function showUnaffordableAlert(purchaseType) {
+    // Create alert element
+    const alert = document.createElement('div');
+    alert.className = 'notification is-danger is-light';
+    alert.style.position = 'fixed';
+    alert.style.top = '10px';
+    alert.style.left = '50%';
+    alert.style.transform = 'translateX(-50%)';
+    alert.style.zIndex = '9999';
+    alert.style.minWidth = '300px';
+    alert.style.textAlign = 'center';
+    
+    let message = '';
+    switch(purchaseType) {
+        case 'iron-miner':
+            message = 'Not enough iron to buy miners!';
+            break;
+        case 'silver-miner':
+            message = 'Not enough silver to buy miners!';
+            break;
+        case 'sulfur':
+            message = 'Not enough iron to buy sulfur!';
+            break;
+        case 'drill':
+            message = 'Not enough iron to buy drills!';
+            break;
+        default:
+            message = 'Not enough resources!';
+    }
+    
+    alert.innerHTML = `<button class="delete" onclick="this.parentElement.remove()"></button>${message}`;
+    document.body.appendChild(alert);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        if (alert.parentNode) {
+            alert.remove();
+        }
+    }, 3000);
+}
+
+function checkAffordability() {
+    // Check iron miner affordability
+    const ironMinerBtn = document.querySelector('button[onclick="buyIronMiner()"]');
+    const ironMinerQuantity = parseInt(document.getElementById('number_workers_tobuy').value);
+    const ironMinerCost = IRON_WORKER_PRICE * ironMinerQuantity;
+    
+    if (iron < ironMinerCost) {
+        ironMinerBtn.classList.add('unaffordable');
+        ironMinerBtn.disabled = true;
+    } else {
+        ironMinerBtn.classList.remove('unaffordable');
+        ironMinerBtn.disabled = false;
+    }
+    
+    // Check silver miner affordability
+    const silverMinerBtn = document.querySelector('button[onclick="buySilverMiner()"]');
+    const silverMinerQuantity = parseInt(document.getElementById('number_silver_workers_tobuy').value);
+    const silverMinerCost = SILVER_WORKER_PRICE * silverMinerQuantity;
+    
+    if (silver < silverMinerCost) {
+        silverMinerBtn.classList.add('unaffordable');
+        silverMinerBtn.disabled = true;
+    } else {
+        silverMinerBtn.classList.remove('unaffordable');
+        silverMinerBtn.disabled = false;
+    }
+    
+    // Check sulfur affordability
+    const sulfurBtn = document.querySelector('button[onclick="buySulfur()"]');
+    const sulfurQuantity = parseInt(document.getElementById('number_tobuy_sulfur').value);
+    const sulfurCost = SULFUR_PRICE * sulfurQuantity;
+    
+    if (iron < sulfurCost) {
+        sulfurBtn.classList.add('unaffordable');
+        sulfurBtn.disabled = true;
+    } else {
+        sulfurBtn.classList.remove('unaffordable');
+        sulfurBtn.disabled = false;
+    }
+    
+    // Check drill affordability
+    const drillBtn = document.querySelector('button[onclick="buyDrill()"]');
+    const drillQuantity = parseInt(document.getElementById('number_tobuy_drill').value);
+    const drillCost = DRILL_PRICE * drillQuantity;
+    
+    if (iron < drillCost) {
+        drillBtn.classList.add('unaffordable');
+        drillBtn.disabled = true;
+    } else {
+        drillBtn.classList.remove('unaffordable');
+        drillBtn.disabled = false;
+    }
+    
+    // Check silver mining requirements
+    const silverBtn = document.querySelector('button[onclick="silverClick()"]');
+    if (drill_units <= 0 || sulfur < 2) {
+        silverBtn.classList.add('unaffordable');
+        silverBtn.disabled = true;
+    } else {
+        silverBtn.classList.remove('unaffordable');
+        silverBtn.disabled = false;
+    }
+}
+
 function AdjustingInterval(workFunc, interval, errorFunc) {
     var that = this;
     var expected, timeout;
@@ -129,6 +234,7 @@ function buyIronMiner()
     else
     {
         console.log("Not enough iron")
+        showUnaffordableAlert('iron-miner')
     }
 }
 
@@ -146,6 +252,7 @@ function buySilverMiner()
     else
     {
         console.log("Not enough silver")
+        showUnaffordableAlert('silver-miner')
     }
 }
 
@@ -166,6 +273,12 @@ function updateMetals()
     {
         drill_counter.innerHTML  = drill_units + ' drills';
     }
+    
+    // Update top resource display counters
+    const sulfur_counter_top = document.getElementById('sulfur_counter_top');
+    sulfur_counter_top.innerHTML = sulfur;
+    const drill_counter_top = document.getElementById('drill_counter_top');
+    drill_counter_top.innerHTML = drill_units;
 }
 
 function updateWorkers()
@@ -191,6 +304,7 @@ function buySulfur()
     else
     {
         console.log("Not enough iron")
+        showUnaffordableAlert('sulfur')
     }
 }
 
@@ -232,6 +346,7 @@ function buyDrill()
     else
     {
         console.log("Not enough iron")
+        showUnaffordableAlert('drill')
     }
 }
 
@@ -365,6 +480,7 @@ var doWork = function() {
     updateMetals();
     updateLabels();
     updateWorkers();
+    checkAffordability();
 };
 
 // Define what to do if something goes wrong
@@ -376,23 +492,91 @@ var doError = function() {
 var ticker = new AdjustingInterval(doWork, 1000, doError);
 
 ticker.start();
+function openHelpModal() {
+    document.getElementById('help-modal').classList.add('is-active');
+}
+
+function closeHelpModal() {
+    document.getElementById('help-modal').classList.remove('is-active');
+    localStorage.setItem('autoMinerHelpSeen', 'true');
+}
+
+function checkFirstTimeUser() {
+    if (!localStorage.getItem('autoMinerHelpSeen')) {
+        setTimeout(() => {
+            openHelpModal();
+        }, 1000); // Show welcome modal after 1 second
+    }
+}
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
+    const themeButton = document.getElementById('theme-toggle');
+    
+    if (html.getAttribute('data-theme') === 'dark') {
+        // Switch to light theme
+        html.setAttribute('data-theme', 'light');
+        themeIcon.className = 'fas fa-moon';
+        themeButton.className = 'button is-dark is-small';
+        localStorage.setItem('autoMinerTheme', 'light');
+    } else {
+        // Switch to dark theme
+        html.setAttribute('data-theme', 'dark');
+        themeIcon.className = 'fas fa-sun';
+        themeButton.className = 'button is-light is-small';
+        localStorage.setItem('autoMinerTheme', 'dark');
+    }
+}
+
+function initializeTheme() {
+    const savedTheme = localStorage.getItem('autoMinerTheme');
+    const html = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
+    const themeButton = document.getElementById('theme-toggle');
+    
+    // Default to dark theme if no preference saved
+    const theme = savedTheme || 'dark';
+    
+    html.setAttribute('data-theme', theme);
+    
+    if (theme === 'light') {
+        themeIcon.className = 'fas fa-moon';
+        themeButton.className = 'button is-dark is-small';
+    } else {
+        themeIcon.className = 'fas fa-sun';
+        themeButton.className = 'button is-light is-small';
+    }
+}
+
 window.onload = function() {
+    initializeTheme();
     updateLabels();
+    checkFirstTimeUser();
 };
 
 document.getElementById('number_workers_tobuy').addEventListener('input', function() {
     // Update labels whenever the input value changes
     updateLabels();
+    checkAffordability();
 });
 
 document.getElementById('number_tobuy_sulfur').addEventListener('input', function() {
     // Update labels whenever the input value changes
     updateLabels();
+    checkAffordability();
 });
 
 document.getElementById('number_tobuy_drill').addEventListener('input', function() {
     // Update labels whenever the input value changes
     updateLabels();
+    checkAffordability();
+});
+
+document.getElementById('number_silver_workers_tobuy').addEventListener('input', function() {
+    // Update labels whenever the input value changes
+    updateLabels();
+    checkAffordability();
 });
 
 
