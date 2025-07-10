@@ -43,12 +43,17 @@
       /* Resource display - theme-aware */
       section#resource-display {
         position: absolute;
-        left: calc(50vw - 101.5px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        min-width: 320px;
       }
       
       section#resource-display.fixed {
         position: fixed;
         top: 7px;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       #resource-display {
@@ -121,19 +126,51 @@
           width: 50% !important;
         }
         
-        #resource-display {
-          left: 50%;
-          transform: translateX(-50%);
-          min-width: 95vw;
+        section#resource-display,
+        section#resource-display.fixed {
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          width: 98vw !important;
+          padding: 0.5rem !important;
+          margin: 0 !important;
         }
         
         #resource-display .is-flex {
-          flex-wrap: wrap;
-          justify-content: center;
+          flex-direction: row !important;
+          flex-wrap: wrap !important;
+          justify-content: space-around !important;
+          align-items: center !important;
+          gap: 0.25rem !important;
         }
         
         #resource-display .mx-2 {
-          margin: 0.25rem 0.5rem;
+          margin: 0.2rem !important;
+          min-width: 40% !important;
+          max-width: 45% !important;
+          justify-content: center !important;
+          font-size: 0.9rem !important;
+        }
+        
+        #resource-display .image {
+          width: 28px !important;
+          height: 28px !important;
+          margin-right: 0.3rem !important;
+        }
+        
+        #resource-display .icon {
+          width: 28px !important;
+          height: 28px !important;
+          margin-right: 0.3rem !important;
+        }
+        
+        #resource-display .ml-1 {
+          margin-left: 0.3rem !important;
+          font-size: 0.9rem !important;
+        }
+        
+        #resource-display .has-text-weight-semibold {
+          font-size: 1rem !important;
+          font-weight: 700 !important;
         }
         
         .title {
